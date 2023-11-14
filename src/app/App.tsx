@@ -1,18 +1,16 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "../features/featuresA/components/Header";
-import './App.scss'
-import User from "../features/featuresA/components/User";
+import './styles/index.scss'
+import LogIn from "features/featuresA/components/LogIn";
 
-const LogInPage = lazy(() => import('../pages/LogInPage'));
-const BoardPage = lazy(() => import('../pages/BoardPage'))
+const LogInPage = lazy(() => import('../pages/LogInPage/ui/LogInPage'));
+const BoardPage = lazy(() => import('../pages/BoardPage/ui/BoardPage'))
 
 const App: React.FC = () => {
     return (
         <BrowserRouter>
-        <div className="app">
-            {/* <Header /> */}
-            <User />
+        <div className='app'>
+            <LogIn />
 
             <Suspense fallback="Loading...">
                 <Routes>

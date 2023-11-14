@@ -10,10 +10,15 @@ body {
     width: 200px;
     height: 200px;
     border-radius: 50%;
+    padding: 15px 0;
+}
+
+.about {
+    padding: 15px 0;
 }
 
 .nameSurname {
-    padding: 0 30px;
+    padding: 20px 30px;
 }
 
 .bio {
