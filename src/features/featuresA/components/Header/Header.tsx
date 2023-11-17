@@ -1,67 +1,78 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaBell, FaCircleInfo } from "react-icons/fa6"
-import './Header.scss'
-import { LogInProps } from '../LogIn/LogIn.interface'
-
-import { auth } from "../../../../firebase";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import Board from '../Board'
+import styles from './Header.module.css'
+import { HeaderProps } from '../Search/Search.interface'
+import Search from '../Search'
 import LogIn from '../LogIn'
 
-const Header: React.FC<LogInProps> = () => {
-    const [user, setUser] = useState<User | null>(null)
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser)
-        })
-
-        return unsubscribe
-    }, [])
-
-    const handleSignOut = () => {
-        signOut(auth).catch(error => console.log(error))
+const Header: React.FC<HeaderProps> = ({ items, user, handleSingOut }) => {
+    const [isUserMenuOpen, setUserMenuOpen] = useState<boolean>(false)
+  
+    const toggleUserMenu = (): void => {
+      setUserMenuOpen(!isUserMenuOpen);
     }
+  
     return (
-        <div className="header">
-            <div className='links'>
-                <ul className='menu'> 
-                    <li>
-                        <Link to="/board">Board</Link>
-                    </li>
-                    <li>
-                        <a href='#'>Workspaces</a>
-                    </li>
-                    <li>
-                        <a href='#'>Favorites</a>
-                    </li>
-                    <li>
-                        <a href='#'>Tempates</a>
-                    </li>
-                    <li>
-                        <Link to="/login">Log Out</Link>
-                    </li>
-                </ul>
-                
-            </div>
-            <div className="user">
-                <input className="search" type='text' placeholder='Search...' />
-                <button className="bell"><FaBell /></button>
-                <button className="info"><FaCircleInfo /></button>
-                <img
-                className="userLogo"
-            src="https://avatars.githubusercontent.com/u/98681?v=4"
-            alt="user name"
-          />    
-            </div>
-
+      <header className={styles.header}>
+        <nav className={styles.menu}>
+          <ul className={styles.mainMenu}>
+            <li>
+              <Link to='/'>Home</Link>
+            </li>
+            <li>
+              <Link to='/user'>Profile</Link>
+            </li>
+            <li>
+              <Link to='/board'>Board</Link>
+            </li>
+          </ul>
+  
+          <Search items={items} />
+  
+          <div className={styles.userContainer}>
             {
-                user ? <Board /> : <LogIn handleSignOut={handleSignOut} />
+              user ? (
+                <>
+                {
+                  user.photoURL ? (
+                    <div>
+                      <p>{user.displayName}</p>
+                      <img
+                    src={user.photoURL}
+                    alt="user name"
+                    className={styles.userImage}
+                    onClick={toggleUserMenu}
+                  />
+                    </div>
+                  ) : <div>{user.displayName}</div>
+                }
+  
+                  {
+                    isUserMenuOpen ? (
+                      <div className={styles.userMenu}>
+                        <ul>
+                          <li>
+                            <a href='#'>Profile</a>
+                          </li>
+                          <li>
+                            <a href='#'>Settings</a>
+                          </li>
+                          <li>
+                            <button onClick={handleSingOut}>Sign Out</button>
+                          </li>
+                        </ul>
+                      </div>
+                    ) : null
+                  }
+                </>
+              ) : (
+                <LogIn />
+              )
             }
-
-        </div>
+          </div>
+        </nav>
+      </header>
     )
-}
-
-export default Header;
+  }
+  
+  export default Header

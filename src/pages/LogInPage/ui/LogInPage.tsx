@@ -1,7 +1,7 @@
 import LogIn from "../../../features/featuresA/components/LogIn";
 import React from "react";
 
-const LogInPage: React.VoidFunctionComponent = () => {
+const LogInPage: React.FC = () => {
     return (
         <LogIn />
     )
